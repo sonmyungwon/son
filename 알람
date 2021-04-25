@@ -1,0 +1,42 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+int main() 
+{
+	int h, m;
+	int a;
+	scanf("%d %d", &h, &m);
+	if (h >= 24) {
+		return 0;
+		if (m > 60) {
+			return 0;
+		}
+	}
+	else if (h ==0) {
+		if (m >= 45) {
+			a = m - 45;
+			m = a;
+
+		}
+		else {
+			h = 23;
+			a = m + 15;
+			m = a;
+
+		}
+	}else if (0 < h < 24) {
+		if (m>=45) {
+			a = m - 45;
+			m = a;
+			
+		}else {
+			a = h - 1;
+			h = a;
+			a = m + 15;
+			m = a;
+			
+		}
+
+	}
+	printf("%d %d", h, m);	
+}
