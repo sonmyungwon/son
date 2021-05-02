@@ -1,0 +1,236 @@
+#include <stdio.h>
+#define _CRT_SECURE_NO_WARNINGS
+#include <malloc.h>
+#include<stdlib.h>
+#include<stdio.h>
+#define MAX_SIZE 25
+
+typedef  struct  _Stack {
+    int top;
+    int capacity;
+    char* array;
+}stack;
+typedef  struct  _Stacki {
+    int top;
+    int capacity;
+    int* array;
+}stacki;
+
+stack* CreateStack() {
+    stack* s = (stack*)malloc(sizeof(stack));
+    if (s != NULL) {
+        s->capacity = MAX_SIZE;
+        s->top = -1;
+        s->array = (char*)malloc(s->capacity * sizeof(char));//배열의 공간을 여유있게 배정한다.
+    }return s;
+}
+stacki* CreateStack2() {
+    stacki* s = (stacki*)malloc(sizeof(stacki));
+    if (s != NULL) {
+        s->capacity = MAX_SIZE;
+        s->top = -1;
+        s->array = (int*)malloc(s->capacity * sizeof(int));//배열의 공간을 여유있게 배정한다.
+    }return s;
+}
+char Top(stack* s) {//top에서 출력할경우 에러가 발생하여 s->array[s->top]값을 반환해준다.
+    return 	s->array[s->top];//top을 참조해야되는 함수들보다 앞으로 이동시켰다.
+}
+char Top2(stacki* s) {
+    return 	s->array[s->top];
+}
+char isEmptyStack(stack* s) {// 만약 스택이 비여있다면 empty를 출력한다.
+    if (s->top == -1) {
+        printf("empty\n");
+    }return  0;
+}
+//만약 스택이 가득차게 된다면 capacity의 크기를 2배로 크게하여
+//realloc으로 array의 크기를 2배로 만들어준다.
+char isFullStack(stack* s) {
+    if (s->top == s->capacity) {//top과 capacity가 같게 될경우 용량을 늘려준다.
+        printf("full\n");
+    }return 0;
+}
+//push 일떄는 스택이 가득차있는지 확인해야된다.그래서 isfullstack이 스택에 들어와야한다.
+char  Push(stack* s, char data) {
+    if (isFullStack(s))
+        ;
+    else {
+        s->array[++s->top] = data;
+
+    }return 0;
+}
+int  Push2(stacki* s, char data) {
+    s->array[++s->top] = data;
+    return 0;
+}
+//;가 없다.i
+char Pop(stack* s) {
+    if (isEmptyStack(s)) { ; }
+    else {
+        s->array[s->top--];//top의 위치를 1만큼 낮추어 다음 출력을 준비한다.
+    }
+    return s->array[s->top + 1];
+}
+int Pop2(stacki* s) {
+        s->array[s->top--];//top의 위치를 1만큼 낮추어 다음 출력을 준비한다.
+    return s->array[s->top + 1];
+}
+void DeleteStack(stack* s) {
+    if (s) {
+        if (s->array) {//먼저 스택안에 있는 배열을 동적할당 했기때문에 먼저 free해주어야 오류가 없다.
+            free(s->array);
+        }
+        free(s);
+    }
+}
+void DeleteStack2(stacki* s) {
+    if (s) {
+        if (s->array) {//먼저 스택안에 있는 배열을 동적할당 했기때문에 먼저 free해주어야 오류가 없다.
+            free(s->array);
+        }
+        free(s);
+    }
+}
+typedef enum {
+    lparen, rparen,
+    plus, minus,
+    times, divide,
+    mod, eos, operand
+} precedence;
+
+precedence get_token(char* exp, char* symbol, int* pn)
+{
+    *symbol = exp[(*pn)++];
+    switch (*symbol)
+    {
+    case '(': return lparen;
+    case ')': return rparen;
+    case '+': return plus;
+    case '-': return minus;
+    case '*': return times;
+    case '/': return divide;
+    case '%': return mod;
+    case '\0': return eos;
+    default: return operand;
+    }
+}
+
+int eval(char* exp) {
+    precedence token2;
+
+    int op1, op2;
+    int n = 0;
+    char symbol;
+
+    int result = 0;
+
+    stacki* s = CreateStack2();
+
+    token2 = get_token(exp, &symbol, &n);
+
+    while (token2 != eos)
+    {
+        if (token2 == operand)
+        {
+            Push2(s, symbol-'0');
+        }
+        else 
+        {
+            op2 = Pop2(s);
+            printf("op2 %d\n", op2);
+            op1 = Pop2(s);
+            printf("op1 %d\n", op1);
+            switch (token2)
+            {
+            case plus: Push2(s, op1 + op2);
+                break;
+            case minus: Push2(s, op1 - op2);
+                break;
+            case times: Push2(s, op1 * op2);
+                break;
+            case divide: Push2(s, op1 / op2);
+                break;
+            case mod: Push2(s, op1 % op2);
+                break;
+            }
+            
+        
+            printf("mid %d\n", Top2(s));
+        }
+        token2 = get_token(exp, &symbol, &n);
+    }
+    DeleteStack2(s);
+    DeleteStack(s);
+    return 0;
+}
+
+int in2postEval(char* exp) {
+   
+    stack* x = CreateStack();
+    precedence token;
+    char num[100] = {0,};
+    int n = 0;
+    int i = 0;
+    char symbol;
+
+    int result = 0;
+    token = get_token(exp, &symbol, &n);
+    while (token != eos) {
+        
+        while (token != rparen)
+        {
+         if (token == operand)
+            {
+                num[i] = symbol;
+                i++;
+            }
+            else if (token == rparen) {
+                break;
+            }
+            else
+            {
+                if (token == eos) { break; }
+                switch (token)
+                {
+                case lparen:Push(x, '(');
+                    break;
+                case plus: Push(x, '+');
+                    break;
+                case minus: Push(x, '-');
+                    break;
+                case times: Push(x, '*');
+                    break;
+                case divide: Push(x, '/');
+                    break;
+                case mod: Push(x, '%');
+                    break;
+                }
+
+            }
+            token = get_token(exp, &symbol, &n);
+        } 
+        while((x->top != -1)) {
+            if (x->array[x->top] == '(') {
+                Pop(x);
+            }
+            else
+            {
+                num[i] = x->array[x->top--];
+                i++;
+            }
+        }
+        if (token == eos) { break; }
+        token = get_token(exp, &symbol, &n);
+    }printf("%s\n", num);
+
+    eval(num);
+    return 0;
+}
+
+int main(void)
+{
+    char exp[] = "(5+4/2)*((9*7)/(8/2+3))-2";
+    
+    printf("postfix evaluation: %d\n", in2postEval(exp));
+    return 0;
+}
