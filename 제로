@@ -1,0 +1,30 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#define MAX 1000000
+int money[MAX];
+
+int main() {
+	int i,j=0;
+	int sum=0;
+	int N;
+	scanf("%d", &N);
+	for (i = 0; i < N-j; i++) {
+		scanf("%d", &money[i]);
+		sum = sum + money[i];
+		if (money[i] == 0) {
+			if (i == 0) {
+				return 0;
+			}
+			i = i - 1;
+			j = j + 1;
+			sum = sum - money[i];
+			i = i - 1;
+			j = j + 1;
+			
+		}
+			
+	}
+	printf("%d", sum);
+
+
+}
