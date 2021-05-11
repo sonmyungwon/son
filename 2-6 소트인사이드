@@ -1,0 +1,151 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<malloc.h>
+#define MAXSIZE 1000000000
+#define SWAP(x,y,t)((t)=(x),(x)=(y),(y)=(t))
+
+int z = 0;
+int partition(int list[], int left, int right) {
+    int pivot;
+    int temp = 0;
+    int low, high;
+    low = left;
+    high = right + 1;
+    pivot = list[left];
+    do {
+        do
+            low++;
+        while (low < right && list[low] > pivot);
+        do
+            high--;
+        while (high >= left && list[high] < pivot);
+        if (low < high) {
+            SWAP(list[low], list[high], temp);
+        }
+    } while (low < high);
+    SWAP(list[left], list[high], temp);
+
+    return high;
+}
+void quick_sort(int list[], int left, int right) {
+    if (left < right) {
+        int q = partition(list, left, right);
+
+        quick_sort(list, left, q - 1);
+        quick_sort(list, q + 1, right);
+    }
+}
+int serch(int list[], int x) {
+    int a = x;
+    z;
+    if (a > 9 && a<=1000000000) {
+        if (a > 1000000000) {
+            z = 9;
+            list[0] = a / 1000000000;
+            list[1] = (a % 1000000000) / 100000000;
+            list[2] = (a % 100000000) / 10000000;
+            list[3] = (a % 10000000) / 1000000;
+            list[4] = (a % 1000000) / 100000;
+            list[5] = (a % 100000) / 10000;
+            list[6] = (a % 10000) / 1000;
+            list[7] = (a % 1000) / 100;
+            list[8] = (a % 100) / 10;
+            list[9] = a % 10;
+
+        }
+        else if (a > 100000000) {
+            z = 8;
+            list[0] = a / 100000000;
+            list[1] = (a % 100000000) / 10000000;
+            list[2] = (a % 10000000) / 1000000;
+            list[3] = (a % 1000000) / 100000;
+            list[4] = (a % 100000) / 10000;
+            list[5] = (a % 10000) / 1000;
+            list[6] = (a % 1000) / 100;
+            list[7] = (a % 100) / 10;
+            list[8] = a % 10;
+
+        }
+        else if (a > 10000000) {
+            z = 7;
+            list[0] = a / 10000000;
+            list[1] = (a % 10000000) / 1000000;
+            list[2] = (a % 1000000) / 100000;
+            list[3] = (a % 100000) / 10000;
+            list[4] = (a % 10000) / 1000;
+            list[5] = (a % 1000) / 100;
+            list[6] = (a % 100) / 10;
+            list[7] = a % 10;
+
+        }
+        else if (a > 1000000) {
+            z = 6;
+            list[0] = a / 1000000;
+            list[1] = (a % 1000000) / 100000;
+            list[2] = (a % 100000) / 10000;
+            list[3] = (a % 10000) / 1000;
+            list[4] = (a % 1000) / 100;
+            list[5] = (a % 100) / 10;
+            list[6] = a % 10;
+
+        }
+        else if (a > 100000) {
+            z = 5;
+            list[0] = a / 100000;
+            list[1] = (a % 100000) / 10000;
+            list[2] = (a % 10000) / 1000;
+            list[3] = (a % 1000) / 100;
+            list[4] = (a % 100) / 10;
+            list[5] = a % 10;
+
+        }
+        else  if (a > 10000) {
+            z = 4;
+            list[0] = a / 10000;
+            list[1] = (a % 10000) / 1000;
+            list[2] = (a % 1000) / 100;
+            list[3] = (a % 100) / 10;
+            list[4] = a % 10;
+        }
+        else  if (a > 1000) {
+            z = 3;
+            list[0] = a / 1000;
+            list[1] = (a % 1000) / 100;
+            list[2] = (a % 100) / 10;
+            list[3] = a % 10;
+
+        }
+        else  if (a >= 100) {
+            z = 2;
+            list[0] = a / 100;
+            list[1] = (a % 100) / 10;
+            list[2] = a % 10;
+
+        }
+        else    if (a >= 10) {
+            z = 1;
+            list[0] = a / 10;
+            list[1] = a % 10;
+
+        }
+    }
+    else if (a < 10) {
+        list[0] = a;
+    }
+    return z;
+}
+int main()
+{
+    unsigned int a = 0; 
+    int list[20] = {0,};
+    
+    scanf("%u",& a);
+    serch(list, a);
+    int left = 0;
+    int right = z;
+  
+    quick_sort(list, left, right);
+    for (int i = 0; i <= z; i++) {
+        printf("%u", list[i]);
+    }
+}
