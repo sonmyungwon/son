@@ -1,0 +1,114 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include <malloc.h>
+#define MAXSIZE 8001
+#define MA 500000
+int sorted[MA];
+int merge(int list[], int left, int mid, int right) {
+    int i, j, k, l;
+    i = left; j = mid + 1; k = left;
+    while (i <= mid && j <= right) {
+        if (list[i] <= list[j])
+        {
+            sorted[k++] = list[i++];
+        }
+        else sorted[k++] = list[j++];
+    }
+    if (i > mid) {
+        for (l = j; l <= right; l++) {
+            sorted[k++] = list[l];
+        }
+    }
+    else for (l = i; l <= mid; l++) {
+        sorted[k++] = list[l];
+    }
+    for (l = left; l <= right; l++) {
+        list[l] = sorted[l];
+    }return 0;
+}
+void merge_sort(int list[], int left, int right) {
+    int mid;
+    if (left < right) {
+        mid = (left + right) / 2;
+        merge_sort(list, left, mid);
+        merge_sort(list, mid + 1, right);
+        merge(list, left, mid, right);
+    }
+}
+
+int main() {
+int count[MAXSIZE] = { 0, };
+
+    int a = 0;
+    scanf("%d", &a);
+    if (a >= 1 && a <= 500000 && a%2==1) {
+        int* list = (int*)malloc(sizeof(int) * a);
+        int mid, sum = 0;
+        int MAX = 0;
+        int m = 0;
+        int Repeat = 0;
+        int min = 0;
+        int left = 0;
+        int right = a - 1;
+        int result = 0;
+        int time;
+        for (int i = 0; i < a; i++) {
+            int num;
+            scanf("%d", &num);
+            if (num <= 4000 && -num <= 4000) {
+                if (i == 0) { MAX = num; }
+                else if (MAX < num) { MAX = num; }
+
+                if (i == 0) { min = num; }
+                else if (min > num) { min = num; }
+
+                list[i] = num;
+
+                if (num < 0) {
+                    count[8001 + num]++;
+                    if (m < count[8001 + num]) {
+                        m = count[8001 + num];
+                    }
+                }
+                else {
+                    count[num]++;
+                    if (m < count[num]) {
+                        m= count[num];
+                    }
+                }
+        
+                sum = sum + num;
+            }
+        }
+        
+        merge_sort(list, left, right);
+        int big[MAXSIZE];int n = 0;
+        for (int k = 4001; k <8001; k++) {
+            if (count[k] == m) {
+                
+                big[n++] =k-8001 ;
+            }
+        }
+        for (int k =0; k <4001; k++) {
+            if (count[k] == m) {
+                big[n++] = k;
+            }
+        }
+        if (n == 1) {
+            time = big[0];
+        }
+        else time = big[1];
+        long double re = (long double)sum / (long double)a;
+        if (re >= 0) {
+            result = (int)(re + 0.5);
+        }
+        else   result = (int)(re - 0.5); 
+
+        mid = a / 2;
+        printf("%d\n", result);
+        printf("%d\n", list[mid]);
+        printf("%d\n", time);
+        printf("%d\n", MAX - min);
+        free(list);
+    }
+}
