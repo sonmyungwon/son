@@ -1,0 +1,31 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include <malloc.h>
+#define MAXSIZE 100000
+
+
+
+
+int main() {
+	int input[MAXSIZE] = { 0, };
+	int count[MAXSIZE] = { 0, };
+
+	int a;
+	int k = 0;
+	scanf("%d", &a);
+	for (int i = 0; i < a; i++) {
+		scanf("%d", &input[i]);
+		if (k < input[i]) { k = input[i]; }
+		count[input[i]]++;
+		if (count[input[i]] > 1) { a--; --i; }
+	}
+
+	for (int j = 1; j <=k; j++) {
+		if (count[j] != 0) {
+			for (int n = 1; n <=count[j]; n++) {
+				printf("%d\n", j);
+			}
+		}
+		
+	}
+}
