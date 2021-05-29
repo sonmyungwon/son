@@ -1,0 +1,80 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<string.h>
+#include <malloc.h>
+
+typedef struct stack {
+    int x;
+    int num;
+    char name[51];
+}stack;
+int a;
+
+int merge(stack* list, int left, int mid, int right) {
+    int i, j, k, l;
+    i = left; j = mid + 1; k = left;
+    stack* sorted = (stack*)malloc(sizeof(stack) * a);
+    if (sorted != NULL) {
+        while (i <= mid && j <= right) {
+            if (list[i].x < list[j].x) { sorted[k++] = list[i++]; }
+            else if (list[i].x == list[j].x) {
+                if (strcmp(list[i].name, list[j].name)==-1) {
+                    sorted[k++] = list[i++];
+                }
+                else if (strcmp(list[i].name, list[j].name) == 1) {
+                    sorted[k++] = list[j++];
+                }
+                else sorted[k++] = list[j++];
+            }
+            else sorted[k++] = list[j++];
+        }
+        if (i > mid) {
+            for (l = j; l <= right; l++) {
+                sorted[k++] = list[l];
+            }
+        }
+        else for (l = i; l <= mid; l++) {
+            sorted[k++] = list[l];
+        }
+        for (l = left; l <= right; l++) {
+            list[l] = sorted[l];
+        }
+        free(sorted);
+        return 0;
+    }
+}
+void merge_sort(stack*list, int left, int right) {
+    int mid;
+    if (left < right) {
+        mid = (left + right) / 2;
+        merge_sort(list, left, mid);
+        merge_sort(list, mid + 1, right);
+        merge(list, left, mid, right);
+    }
+}
+
+
+int main() {
+    a = 0;
+    scanf("%d", &a);
+    int left = 0;
+    int right = a - 1;
+    stack* list = (stack*)malloc(sizeof(stack) * a);
+    if (list == NULL) { return -1; }
+    if (a >= 1 && a <= 20000) {
+        for (int i = 0; i < a; i++) {
+            scanf("%s", list[i].name);
+            list[i].x =strlen(list[i].name);
+            list[i].num = list[i].name[0];
+        }
+    }
+    merge_sort(list, left, right);
+    for (int i = 0; i < a; i++) {
+        if (i ==0 && strcmp(list[i].name, list[i +1].name)!=0){ printf("%s\n", list[i].name); }
+        else if (strcmp(list[i].name, list[i - 1].name) == 0) {
+            i++;
+        }
+        else printf("%s\n",  list[i].name); }
+    free(list);
+    return 0;
+}
