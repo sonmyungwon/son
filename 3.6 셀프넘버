@@ -1,0 +1,48 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+#include <stdio.h>
+#define MAX_NUMBER 10000
+
+int self_numbers[MAX_NUMBER] = {};
+void findSelf();
+
+int main(void)
+{
+	findSelf();
+	for (int g = 0; g < MAX_NUMBER; g++)
+	{
+		int count = 0;
+
+		for (int j = 0; j < MAX_NUMBER; j++)
+		{
+			if (g == self_numbers[j])
+			{
+				count++;
+				break;
+			}
+		}
+		if (count == 0)
+		{
+			printf("%d\n", g);
+		}
+	}
+	return 0;
+}
+
+void findSelf()
+{
+	for (int i = 0; i < MAX_NUMBER; i++)
+	{
+		int d_n = i;
+		float num = i;
+
+		while (float(num) >= 1)
+		{
+			int rem = int(num) % 10;
+			d_n += rem;
+			num = float(num / 10);
+		}
+		self_numbers[i] = d_n;
+	}
+}
