@@ -1,0 +1,71 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include <malloc.h>
+
+typedef struct stack {
+    int x;
+    int num;
+    char name[101];
+}stack;
+int a;
+
+int merge(stack* list, int left, int mid, int right) {
+    int i, j, k, l;
+    i = left; j = mid + 1; k = left;
+    stack* sorted = (stack*)malloc(sizeof(stack) * a);
+    if (sorted != NULL) {
+        while (i <= mid && j <= right) {
+            if (list[i].x < list[j].x) { sorted[k++] = list[i++]; }
+            else if (list[i].x == list[j].x) {
+                if (list[i].num < list[j].num) {
+                    sorted[k++] = list[i++];
+                }
+                else sorted[k++] = list[j++];
+            }
+            else sorted[k++] = list[j++];
+        }
+        if (i > mid) {
+            for (l = j; l <= right; l++) {
+                sorted[k++] = list[l];
+            }
+        }
+        else for (l = i; l <= mid; l++) {
+            sorted[k++] = list[l];
+        }
+        for (l = left; l <= right; l++) {
+            list[l] = sorted[l];
+        }
+        free(sorted);
+        return 0;
+    }
+}
+void merge_sort(stack*list, int left, int right) {
+    int mid;
+    if (left < right) {
+        mid = (left + right) / 2;
+        merge_sort(list, left, mid);
+        merge_sort(list, mid + 1, right);
+        merge(list, left, mid, right);
+    }
+}
+
+
+int main() {
+    a = 0;
+    scanf("%d", &a);
+    int left = 0;
+    int right = a - 1;
+    stack* list = (stack*)malloc(sizeof(stack) * a);
+    if (list == NULL) { return -1; }
+    if (a >= 1 && a <= 100000) {
+        for (int i = 0; i < a; i++) {
+            scanf("%d %s", &list[i].x, list[i].name);
+            list[i].num = i;
+            if (list[i].x > 200 && list[i].x < 1) { i--; }
+        }
+    }
+    merge_sort(list, left, right);
+    for (int i = 0; i < a; i++) { printf("%d %s\n", list[i].x, list[i].name); }
+    free(list);
+    return 0;
+}
