@@ -1,0 +1,91 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include<stdlib.h>
+#define MAX_VERTICES 1001
+typedef struct graphtype{
+	int n;
+int adj_mat[MAX_VERTICES][MAX_VERTICES];
+}graphType;
+int dvisited[MAX_VERTICES];
+int bvisited[MAX_VERTICES];
+int queue[MAX_VERTICES];
+void init(graphType* g) {
+	int r, c;
+	g->n =  0;
+	for (r = 0; r < MAX_VERTICES; r++) {
+		for (c = 0; c < MAX_VERTICES; c++) {
+			g->adj_mat[r][c] = 0;
+		}
+	}
+}
+void insert_vertex(graphType* g,int i)
+{
+	g->n = i;
+	if ((g->n)  > MAX_VERTICES) {
+		printf("그래프: 정점의 개수 초과");
+		return;
+	}
+	
+}
+void insert_edge(graphtype* g, int start, int end) {
+	if (start > g->n || end > g->n) {
+		printf("그래프:정점번호오류");
+		return;
+	}
+	g->adj_mat[start][end] = 1;
+	g->adj_mat[end][start] = 1;
+}
+
+
+void dfs_mat(graphType* g, int v)
+{
+	int w;
+	dvisited[v] = true; // 정점 v의 방문 표시
+	printf("%d ", v); // 방문한 정점 출력
+	for (w = 0; w <= g->n; w++) {// 인접 정점 탐색
+		if (g->adj_mat[v][w]==1 && dvisited[w]==0)
+			dfs_mat(g, w); //정점 w에서 DFS 새로 시작
+	} 
+}
+void bfs_mat(graphType* g, int v)
+{
+	int front = 0, rear = 0, pop;
+	printf("%d ", v);
+	int w;
+	
+	queue[0] = v;
+	rear++;
+	bvisited[v] = true; 
+
+	while (front<rear) {
+		pop=queue[front];
+		front++;
+		for (w = 1; w <= g->n; w++) // 인접 정점 탐색
+			if (g->adj_mat[pop][w]==1 && bvisited[w]==0) {
+				printf("%d ", w);
+				queue[rear] = w;
+				rear++;
+				bvisited[w] = true; 
+			}
+	}
+	printf("\n");
+}
+int main() {
+	graphType* g;
+	g = (graphType*)malloc(sizeof(graphType));
+	init(g);
+	int N, M,V;
+	scanf("%d %d %d", &N, &M, &V);
+	
+	insert_vertex(g, N);
+	
+	for (int i = 0; i < M; i++) {
+		int a, b;
+		scanf("%d %d", &a, &b);
+		insert_edge(g, a, b);
+	}
+	dfs_mat(g, V);
+	printf("\n");
+	bfs_mat(g,V);
+	free(g);
+}
